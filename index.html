@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Query String Parser — Free Online Tool</title>
+<meta name="description" content="Free online URL query string parser. Parse, decode, build, and encode URL parameters. Copy as JSON or curl. Sort and edit query strings easily.">
+<meta property="og:title" content="URL Query String Parser — Free Online Tool">
+<meta property="og:description" content="Parse, decode, build, and encode URL query parameters. Copy as JSON or curl. Free, fast, no signup.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://query-parser.pages.dev">
+<meta property="og:image" content="https://query-parser.pages.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="URL Query String Parser — Free Online Tool">
+<meta name="twitter:description" content="Parse, decode, build, and encode URL query parameters. Copy as JSON or curl.">
+<link rel="canonical" href="https://query-parser.pages.dev">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "URL Query String Parser",
+  "url": "https://query-parser.pages.dev",
+  "description": "Free online tool to parse, decode, build, and encode URL query string parameters. Copy as JSON or curl.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I parse a URL query string?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Paste any URL with query parameters into the input field. The tool automatically extracts all key-value pairs, decodes encoded characters, and displays them in a table. You can also see the protocol, host, pathname, hash, and origin components."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is URL encoding and why does it matter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "URL encoding converts special characters into %XX format so they can be safely transmitted in a URL. Characters like spaces (%20), ampersands (%26), and equals signs (%3D) must be encoded to avoid breaking the query string structure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I build a URL from scratch with this tool?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Switch to Build Mode to add key-value pairs. The tool generates a complete URL with properly encoded query parameters. You can add, remove, and edit parameters, then copy the generated URL."
+      }
+    }
+  ]
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--accent2:#1f6feb;--green:#3fb950;--red:#f85149;--orange:#d29922;--radius:8px}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 20px}
+
+header{padding:40px 0 20px;text-align:center}
+header h1{font-size:clamp(1.5rem,4vw,2rem);font-weight:700;margin-bottom:8px}
+header p{color:var(--text2);font-size:1rem;max-width:600px;margin:0 auto}
+
+main{padding:20px 0 60px}
+section{margin-bottom:48px}
+
+/* Input area */
+.input-group{position:relative;margin-bottom:16px}
+.input-group textarea{width:100%;min-height:80px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:14px;resize:vertical;outline:none;transition:border-color .2s}
+.input-group textarea:focus{border-color:var(--accent)}
+.input-group textarea::placeholder{color:var(--text2)}
+
+/* URL Components */
+.url-components{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:20px}
+.url-comp{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px}
+.url-comp .label{color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.url-comp .value{font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;word-break:break-all;margin-top:2px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab-btn{background:none;border:none;color:var(--text2);padding:8px 16px;cursor:pointer;font-size:14px;font-weight:500;border-bottom:2px solid transparent;transition:all .2s}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn:hover{color:var(--text)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--bg3);border-color:var(--text2)}
+.btn-primary{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.btn-primary:hover{background:var(--accent)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-danger{color:var(--red)}
+.btn-danger:hover{background:rgba(248,81,73,.1)}
+
+/* Table */
+.params-table{width:100%;border-collapse:collapse;font-size:14px}
+.params-table th{text-align:left;padding:10px 12px;background:var(--bg2);color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.params-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.params-table tr:hover td{background:rgba(88,166,255,.04)}
+.params-table .mono{font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:13px;word-break:break-all}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text2)}
+
+/* Build mode */
+.build-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.build-row input{flex:1;min-width:120px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:13px;outline:none;transition:border-color .2s}
+.build-row input:focus{border-color:var(--accent)}
+.build-row input::placeholder{color:var(--text2)}
+.generated-url{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:13px;word-break:break-all;min-height:44px;margin-top:12px;position:relative}
+.generated-url .copy-btn{position:absolute;top:8px;right:8px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;opacity:0;transition:all .3s ease;z-index:9999;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.feature-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px}
+.feature-card .icon{font-size:28px;margin-bottom:12px}
+.feature-card h3{font-size:1rem;margin-bottom:8px}
+.feature-card p{color:var(--text2);font-size:14px}
+
+/* FAQ */
+.faq-list{max-width:700px}
+.faq-item{border-bottom:1px solid var(--border);padding:20px 0}
+.faq-item summary{cursor:pointer;font-weight:600;font-size:1rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq-item summary::after{content:'+';font-size:1.2rem;color:var(--text2);transition:transform .2s}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item p{margin-top:12px;color:var(--text2);font-size:15px;line-height:1.7}
+
+/* Email widget */
+.email-widget{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;max-width:500px;margin:0 auto}
+.email-widget h3{font-size:1.1rem;margin-bottom:8px}
+.email-widget p{color:var(--text2);font-size:14px;margin-bottom:16px}
+.email-widget a{color:var(--accent);font-size:15px}
+
+/* Cross links */
+.cross-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.cross-links a{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 16px;font-size:13px;transition:all .15s}
+.cross-links a:hover{text-decoration:none;border-color:var(--accent);color:var(--accent)}
+
+footer{text-align:center;padding:32px 0;border-top:1px solid var(--border);color:var(--text2);font-size:13px}
+
+@media(max-width:600px){
+  .params-table{font-size:12px}
+  .params-table th,.params-table td{padding:6px 8px}
+  .build-row input{min-width:80px}
+  .toolbar{gap:4px}
+  .btn{padding:6px 10px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>URL Query String Parser</h1>
+    <p>Parse, decode, build, and encode URL query parameters. Free, fast, runs entirely in your browser.</p>
+  </header>
+
+  <main>
+    <!-- Parser Section -->
+    <section id="parser">
+      <div class="input-group">
+        <textarea id="urlInput" placeholder="Paste a URL with query params, e.g. https://example.com/api?key=value&name=John%20Doe&sort=desc#section1" autofocus></textarea>
+      </div>
+
+      <div id="urlParts" class="url-components" style="display:none">
+        <div class="url-comp"><div class="label">Protocol</div><div class="value" id="partProtocol">—</div></div>
+        <div class="url-comp"><div class="label">Host</div><div class="value" id="partHost">—</div></div>
+        <div class="url-comp"><div class="label">Pathname</div><div class="value" id="partPathname">—</div></div>
+        <div class="url-comp"><div class="label">Hash</div><div class="value" id="partHash">—</div></div>
+        <div class="url-comp"><div class="label">Origin</div><div class="value" id="partOrigin">—</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="parse">Parse Mode</button>
+        <button class="tab-btn" data-tab="build">Build Mode</button>
+      </div>
+
+      <!-- Parse Tab -->
+      <div id="tabParse" class="tab-content active">
+        <div class="toolbar">
+          <button class="btn" id="btnSort" title="Sort parameters alphabetically">Sort A→Z</button>
+          <button class="btn" id="btnCopyJson">Copy as JSON</button>
+          <button class="btn" id="btnCopyCurl">Copy as curl</button>
+          <button class="btn" id="btnClear">Clear</button>
+        </div>
+        <div id="parseResults">
+          <div class="empty-state">Paste a URL above to parse its query parameters</div>
+        </div>
+      </div>
+
+      <!-- Build Tab -->
+      <div id="tabBuild" class="tab-content">
+        <div class="toolbar">
+          <button class="btn btn-primary" id="btnAddParam">+ Add Parameter</button>
+          <button class="btn" id="btnClearBuild">Clear All</button>
+        </div>
+        <div id="buildRows"></div>
+        <div class="generated-url" id="generatedUrl" style="display:none">
+          <span id="generatedUrlText"></span>
+          <button class="btn btn-sm copy-btn" onclick="copyText(document.getElementById('generatedUrlText').textContent)">Copy</button>
+        </div>
+        <div id="buildBaseGroup" style="margin-top:12px">
+          <div class="build-row">
+            <input type="text" id="buildBase" placeholder="Base URL (e.g. https://example.com/path)" style="flex:3">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+      <h2 style="margin-bottom:20px;font-size:1.3rem">Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="icon">🔍</div>
+          <h3>Instant Parse &amp; Decode</h3>
+          <p>Paste any URL and instantly see every query parameter parsed and decoded in a clean table. Handles URL-encoded values, arrays, and special characters.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🛠️</div>
+          <h3>Build &amp; Edit URLs</h3>
+          <p>Switch to Build Mode to add, edit, or remove key-value pairs. The tool generates a properly encoded URL in real time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📋</div>
+          <h3>Copy as JSON or curl</h3>
+          <p>One click to copy all parameters as a JSON object or as a ready-to-use curl command. Copy individual values with per-row buttons.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">⚡</div>
+          <h3>Encode &amp; Sort</h3>
+          <p>Toggle URL encoding on individual values. Sort all parameters alphabetically. Everything runs locally in your browser — no data leaves your machine.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2 style="margin-bottom:20px;font-size:1.3rem">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>How do I parse a URL query string?</summary>
+          <p>Paste any URL with query parameters into the input field. The tool automatically extracts all key-value pairs, decodes encoded characters, and displays them in a table. You can also see the protocol, host, pathname, hash, and origin components broken out separately.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What is URL encoding and why does it matter?</summary>
+          <p>URL encoding converts special characters into <code>%XX</code> format so they can be safely transmitted in a URL. Characters like spaces (<code>%20</code>), ampersands (<code>%26</code>), and equals signs (<code>%3D</code>) must be encoded to avoid breaking the query string structure. This tool shows both the raw and decoded values side by side.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I build a URL from scratch with this tool?</summary>
+          <p>Yes. Switch to Build Mode to add key-value pairs. The tool generates a complete URL with properly encoded query parameters. You can add, remove, and edit parameters, then copy the generated URL with one click.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Email Widget -->
+    <section id="contact">
+      <div class="email-widget">
+        <h3>Have Feedback or Found a Bug?</h3>
+        <p>We'd love to hear from you. Drop us an email anytime.</p>
+        <a href="mailto:feedback@query-parser.pages.dev">feedback@query-parser.pages.dev</a>
+      </div>
+    </section>
+
+    <!-- Cross Links -->
+    <section id="links" style="text-align:center;margin-top:40px">
+      <h2 style="margin-bottom:16px;font-size:1.1rem">Related Tools</h2>
+      <div class="cross-links">
+        <a href="https://json-formatter.pages.dev" rel="noopener">JSON Formatter</a>
+        <a href="https://base64-tool.pages.dev" rel="noopener">Base64 Encoder</a>
+        <a href="https://jwt-decoder.pages.dev" rel="noopener">JWT Decoder</a>
+        <a href="https://regex-tester.pages.dev" rel="noopener">Regex Tester</a>
+        <a href="https://cron-parser.pages.dev" rel="noopener">Cron Parser</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 URL Query String Parser. Free online tool. No data collected.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+
+let params=[];
+let sorted=false;
+
+// Toast
+function showToast(msg='Copied!'){
+  const t=$('#toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// Copy helper
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>showToast()).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast();
+  });
+}
+
+// Tab switching
+$$('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    $$('.tab-btn').forEach(b=>b.classList.remove('active'));
+    $$('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    const tab=btn.dataset.tab;
+    $(`#tab${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active');
+    if(tab==='build') syncBuildFromParams();
+  });
+});
+
+// Parse URL input
+const urlInput=$('#urlInput');
+let debounce;
+urlInput.addEventListener('input',()=>{
+  clearTimeout(debounce);
+  debounce=setTimeout(parseUrl,200);
+});
+
+function parseUrl(){
+  const raw=urlInput.value.trim();
+  if(!raw){
+    $('#parseResults').innerHTML='<div class="empty-state">Paste a URL above to parse its query parameters</div>';
+    $('#urlParts').style.display='none';
+    params=[];sorted=false;return;
+  }
+  let url;
+  try{
+    if(!/^https?:\/\//i.test(raw)&&!raw.startsWith('/')){url=new URL('https://'+raw)}else{url=new URL(raw)}
+  }catch(e){
+    $('#parseResults').innerHTML='<div class="empty-state" style="color:var(--red)">Invalid URL. Please enter a valid URL with query parameters.</div>';
+    $('#urlParts').style.display='none';params=[];return;
+  }
+
+  // URL components
+  $('#partProtocol').textContent=url.protocol;
+  $('#partHost').textContent=url.host;
+  $('#partPathname').textContent=url.pathname;
+  $('#partHash').textContent=url.hash||'—';
+  $('#partOrigin').textContent=url.origin;
+  $('#urlParts').style.display='grid';
+
+  // Parse params
+  params=[];
+  url.searchParams.forEach((v,k)=>{params.push({key:k,value:v,decoded:decodeURIComponent(v)})});
+  sorted=false;
+  renderTable();
+}
+
+function renderTable(){
+  if(!params.length){
+    $('#parseResults').innerHTML='<div class="empty-state">No query parameters found in this URL.</div>';return;
+  }
+  let html='<table class="params-table"><thead><tr><th>Parameter</th><th>Value</th><th>Decoded Value</th><th style="width:100px"></th></tr></thead><tbody>';
+  params.forEach((p,i)=>{
+    const val=p.value;
+    const dec=p.decoded;
+    const escaped=key=>key.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    html+=`<tr>
+      <td class="mono">${escaped(p.key)}</td>
+      <td class="mono">${escaped(val)}</td>
+      <td class="mono">${escaped(dec)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-sm" onclick="copyText('${escaped(dec).replace(/'/g,"\\'")}')" title="Copy decoded value">Copy</button>
+        <button class="btn btn-sm" onclick="encodeDecode(${i})" title="Toggle encode/decode" style="margin-left:2px">↔</button>
+      </td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  $('#parseResults').innerHTML=html;
+}
+
+function encodeDecode(idx){
+  const p=params[idx];
+  // Toggle: if decoded===value, show encoded; else show decoded
+  if(p.value===p.decoded){
+    p.value=encodeURIComponent(p.decoded);
+  }else{
+    p.value=decodeURIComponent(p.value);
+  }
+  p.decoded=decodeURIComponent(p.value);
+  renderTable();
+}
+
+// Sort
+$('#btnSort').addEventListener('click',()=>{
+  if(!params.length)return;
+  sorted=!sorted;
+  if(sorted)params.sort((a,b)=>a.key.localeCompare(b.key));
+  else{parseUrl();return;}
+  renderTable();
+  showToast(sorted?'Sorted A→Z':'Original order');
+});
+
+// Copy as JSON
+$('#btnCopyJson').addEventListener('click',()=>{
+  if(!params.length)return;
+  const obj={};params.forEach(p=>{obj[p.key]=p.decoded});
+  copyText(JSON.stringify(obj,null,2));
+});
+
+// Copy as curl
+$('#btnCopyCurl').addEventListener('click',()=>{
+  const raw=urlInput.value.trim();
+  if(!raw)return;
+  let url;
+  try{if(!/^https?:\/\//i.test(raw))url=new URL('https://'+raw);else url=new URL(raw)}catch(e){return}
+  let curl=`curl '${url.origin}${url.pathname}${url.search}'`;
+  if(url.hash)curl+=` \\\n  --fragment '${url.hash.slice(1)}'`;
+  copyText(curl);
+});
+
+// Clear
+$('#btnClear').addEventListener('click',()=>{urlInput.value='';parseUrl()});
+
+// ===== BUILD MODE =====
+let buildParams=[];
+let buildId=0;
+
+function syncBuildFromParams(){
+  if(params.length){
+    buildParams=params.map(p=>({id:buildId++,key:p.key,value:p.decoded}));
+  }
+  renderBuild();
+}
+
+function renderBuild(){
+  const c=$('#buildRows');
+  if(!buildParams.length){
+    c.innerHTML='<div class="empty-state" style="padding:20px">No parameters yet. Click "+ Add Parameter" to start.</div>';
+    $('#generatedUrl').style.display='none';return;
+  }
+  c.innerHTML=buildParams.map(p=>`
+    <div class="build-row" data-id="${p.id}">
+      <input type="text" value="${esc(p.key)}" placeholder="Key" oninput="updateBuildParam(${p.id},'key',this.value)">
+      <input type="text" value="${esc(p.value)}" placeholder="Value" oninput="updateBuildParam(${p.id},'value',this.value)" style="flex:2">
+      <button class="btn btn-sm btn-danger" onclick="removeBuildParam(${p.id})">✕</button>
+    </div>`).join('');
+  updateGeneratedUrl();
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+
+window.updateBuildParam=function(id,field,val){
+  const p=buildParams.find(x=>x.id===id);if(p)p[field]=val;
+  updateGeneratedUrl();
+};
+
+window.removeBuildParam=function(id){
+  buildParams=buildParams.filter(x=>x.id!==id);
+  renderBuild();
+};
+
+function updateGeneratedUrl(){
+  const base=$('#buildBase').value.trim()||'https://example.com';
+  const qs=buildParams.filter(p=>p.key).map(p=>`${encodeURIComponent(p.key)}=${encodeURIComponent(p.value)}`).join('&');
+  const full=qs?`${base}?${qs}`:base;
+  $('#generatedUrlText').textContent=full;
+  $('#generatedUrl').style.display='block';
+}
+
+$('#buildBase').addEventListener('input',updateGeneratedUrl);
+
+$('#btnAddParam').addEventListener('click',()=>{
+  buildParams.push({id:buildId++,key:'',value:''});
+  renderBuild();
+  const inputs=$$('#buildRows .build-row:last-child input');
+  if(inputs.length)inputs[0].focus();
+});
+
+$('#btnClearBuild').addEventListener('click',()=>{
+  buildParams=[];renderBuild();
+});
+
+// Init render
+renderBuild();
+</script>
+</body>
+</html>
